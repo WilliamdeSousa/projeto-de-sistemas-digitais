@@ -1,4 +1,4 @@
-# Projeto de Projeto de Sistemas Digitais
+# Projeto de Sistemas Digitais
 
 ## Informações da disciplina
 
