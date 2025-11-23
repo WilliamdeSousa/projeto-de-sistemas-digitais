@@ -2,7 +2,7 @@ module resetHold5s #(parameter TIME_TO_RST = 5) (
   input   logic   clk, reset_in,
   output  logic   reset_out
 );
-  logic [5:0] Tr;
+  logic [13:0] Tr;
 
   enum logic [1:0] {esperando, debounce, reset_valido} estado;
 
@@ -15,7 +15,7 @@ module resetHold5s #(parameter TIME_TO_RST = 5) (
         end
       end
       debounce: begin
-        Tr++;
+        Tr <= Tr + 1;
         if (!reset_in) estado <= esperando;
         else if (Tr > TIME_TO_RST * 1000) estado <= reset_valido;
       end
