@@ -1,12 +1,11 @@
 import tipos_pacotes::*;
 
 module operacional#(
-  FECHAR_AUT,
-  DEBOUNCE,
-  DURACAO,
-  BIPAR,
-  SENHA_ERRADA,
-  BLOQUEADO,
+  parameter FECHAR_AUT = 5000,
+  parameter DEBOUNCE = 100,
+  parameter DURACAO = 50,
+  parameter SENHA_ERRADA = 1000,
+  parameter BLOQUEADO = 30000
 ) (
   input		logic		    clk,
 	input		logic		    rst,
@@ -41,18 +40,17 @@ module operacional#(
     debounce_sair_nao_pertube,
     debounce_trancar,
     debounce_destrancar,
+    leitura_senha_master,
+    validar_senha_master
   } estado;
-  logic [4:0] cont, contFechado;
+  logic [4:0] cont, contFechado, tent;
+  logic [19:0] [3:0] senha, mask;
+  logic senha_valida1, senha_valida2, senha_valida3, senha_valida4, senha_master_valida;
 
-  assign erro_teclado = digitos_valid && (digitos_value[0] >= 10);
-  assign confirmar = digitos_valid && (digitos_value[0] != 'hE);
-  assign senha_certa = (
-    digitos_value == senha_master ||
-    digitos_value == senha1 ||
-    digitos_value == senha2 ||
-    digitos_value == senha3 ||
-    digitos_value == senha4
-  );
+  assign exit_setup = (digitos_value.digits[0] == 'hB);
+  assign erro_teclado = digitos_valid && (digitos_value.digits[0] == 'hE);
+  assign confirmar = digitos_valid && (digitos_value.digits[0] != 'hE && digitos_value.digits[0] != 'hB );
+  assign senha_certa = (senha_valida1 || senha_valida2 || senha_valida3 || senha_valida4);
 
   always_ff @(posedge clk, posedge rst) begin
     if (rst) begin
@@ -66,6 +64,7 @@ module operacional#(
         reset: begin
           if (!sensor_contato) begin
             estado <= porta_trancada;
+            tent <= 0;
           end
         end
         porta_trancada: begin
@@ -83,6 +82,7 @@ module operacional#(
           end
           else if (confirmar) begin
             estado <= validar_senha;
+            tent <= tent + 1;
           end
         end
         porta_encostada: begin
@@ -98,22 +98,22 @@ module operacional#(
             estado <= porta_trancada;
           end
           else begin
-            contFechado++;
+            contFechado <= contFechado + 1;
           end
         end
         porta_aberta: begin
           if (botao_config) begin
-            estado <= setup;
+            estado <= leitura_senha_master;
           end
           else if (!sensor_contato) begin
             estado <= porta_encostada;
             contFechado <= 0;
           end
-          else if (cont >= BIPAR) begin
+          else if (cont >= data_setup_new.bip_time) begin
             estado <= bipar_porta_aberta;
           end
           else begin
-            cont++;
+            cont <= cont + 1;
           end
         end
         setup: begin
@@ -125,9 +125,10 @@ module operacional#(
           if (cont >= BLOQUEADO) begin
             cont <= 0;
             tent <= 0;
+            estado <= porta_trancada;
           end
           else begin
-            cont++;
+            cont <= cont + 1;
           end
         end
         nao_pertube: begin
@@ -137,9 +138,8 @@ module operacional#(
           end
         end
         senha_errada: begin
-          tent++;
           if (cont < SENHA_ERRADA) begin
-            cont++;
+            cont <= cont + 1;
           end
           else if (tent < 5) begin
             estado <= porta_trancada;
@@ -150,12 +150,177 @@ module operacional#(
           end
         end
         validar_senha: begin
+          // Validar senha 1
+          senha <= data_setup_new.senha_1.digits;
+          if (senha[3*4 +:4] == 'hF)
+            mask <= 'hFFFFFFFFFFFFFFFFFFFF;
+          else if (senha[4*4 +:4] == 'hF)
+            mask <= 'hFFFFFFFFFFFFFFFF0000;
+          else if (senha[5*4 +:4] == 'hF)
+            mask <= 'hFFFFFFFFFFFFFFF00000;
+          else if (senha[6*4 +:4] == 'hF)
+            mask <= 'hFFFFFFFFFFFFFF000000;
+          else if (senha[7*4 +:4] == 'hF)
+            mask <= 'hFFFFFFFFFFFFF0000000;
+          else if (senha[8*4 +:4] == 'hF)
+            mask <= 'hFFFFFFFFFFFF00000000;
+          else if (senha[9*4 +:4] == 'hF)
+            mask <= 'hFFFFFFFFFFF000000000;
+          else if (senha[10*4 +:4] == 'hF)
+            mask <= 'hFFFFFFFFFF0000000000;
+          else if (senha[11*4 +:4] == 'hF)
+            mask <= 'hFFFFFFFFF00000000000;
+          else if (senha[12*4 +:4] == 'hF)
+            mask <= 'hFFFFFFFF000000000000;
+          else 	mask <= 80'hFFFFFFFFFFFFFFFFFFFF;
+
+          senha_valida1 <= ((((~((~digitos_value)>>(0*4)))|mask)==senha) |
+            (((~((~digitos_value)>>(1*4)))|mask)==senha) |
+            (((~((~digitos_value)>>(2*4)))|mask)==senha) |
+            (((~((~digitos_value)>>(3*4)))|mask)==senha) |
+            (((~((~digitos_value)>>(4*4)))|mask)==senha) |
+            (((~((~digitos_value)>>(5*4)))|mask)==senha) |
+            (((~((~digitos_value)>>(6*4)))|mask)==senha) |
+            (((~((~digitos_value)>>(7*4)))|mask)==senha) |
+            (((~((~digitos_value)>>(8*4)))|mask)==senha) |
+            (((~((~digitos_value)>>(9*4)))|mask)==senha) |
+            (((~((~digitos_value)>>(10*4)))|mask)==senha) |
+            (((~((~digitos_value)>>(11*4)))|mask)==senha) |
+            (((~((~digitos_value)>>(12*4)))|mask)==senha) |
+            (((~((~digitos_value)>>(13*4)))|mask)==senha) |
+            (((~((~digitos_value)>>(14*4)))|mask)==senha) |
+            (((~((~digitos_value)>>(15*4)))|mask)==senha) |
+            (((~((~digitos_value)>>(16*4)))|mask)==senha));
+          //Validar senha 2
+          senha <= data_setup_new.senha_2.digits;
+          if (senha[3*4 +:4] == 'hF)
+            mask <= 'hFFFFFFFFFFFFFFFFFFFF;
+          else if (senha[4*4 +:4] == 'hF)
+            mask <= 'hFFFFFFFFFFFFFFFF0000;
+          else if (senha[5*4 +:4] == 'hF)
+            mask <= 'hFFFFFFFFFFFFFFF00000;
+          else if (senha[6*4 +:4] == 'hF)
+            mask <= 'hFFFFFFFFFFFFFF000000;
+          else if (senha[7*4 +:4] == 'hF)
+            mask <= 'hFFFFFFFFFFFFF0000000;
+          else if (senha[8*4 +:4] == 'hF)
+            mask <= 'hFFFFFFFFFFFF00000000;
+          else if (senha[9*4 +:4] == 'hF)
+            mask <= 'hFFFFFFFFFFF000000000;
+          else if (senha[10*4 +:4] == 'hF)
+            mask <= 'hFFFFFFFFFF0000000000;
+          else if (senha[11*4 +:4] == 'hF)
+            mask <= 'hFFFFFFFFF00000000000;
+          else if (senha[12*4 +:4] == 'hF)
+            mask <= 'hFFFFFFFF000000000000;
+          else 	mask <= 80'hFFFFFFFFFFFFFFFFFFFF;
+
+          senha_valida2 <= ((((~((~digitos_value)>>(0*4)))|mask)==senha) |
+            (((~((~digitos_value)>>(1*4)))|mask)==senha) |
+            (((~((~digitos_value)>>(2*4)))|mask)==senha) |
+            (((~((~digitos_value)>>(3*4)))|mask)==senha) |
+            (((~((~digitos_value)>>(4*4)))|mask)==senha) |
+            (((~((~digitos_value)>>(5*4)))|mask)==senha) |
+            (((~((~digitos_value)>>(6*4)))|mask)==senha) |
+            (((~((~digitos_value)>>(7*4)))|mask)==senha) |
+            (((~((~digitos_value)>>(8*4)))|mask)==senha) |
+            (((~((~digitos_value)>>(9*4)))|mask)==senha) |
+            (((~((~digitos_value)>>(10*4)))|mask)==senha) |
+            (((~((~digitos_value)>>(11*4)))|mask)==senha) |
+            (((~((~digitos_value)>>(12*4)))|mask)==senha) |
+            (((~((~digitos_value)>>(13*4)))|mask)==senha) |
+            (((~((~digitos_value)>>(14*4)))|mask)==senha) |
+            (((~((~digitos_value)>>(15*4)))|mask)==senha) |
+            (((~((~digitos_value)>>(16*4)))|mask)==senha));
+          //Validar senha 3
+          senha <= data_setup_new.senha_3.digits;
+          if (senha[3*4 +:4] == 'hF)
+            mask <= 'hFFFFFFFFFFFFFFFFFFFF;
+          else if (senha[4*4 +:4] == 'hF)
+            mask <= 'hFFFFFFFFFFFFFFFF0000;
+          else if (senha[5*4 +:4] == 'hF)
+            mask <= 'hFFFFFFFFFFFFFFF00000;
+          else if (senha[6*4 +:4] == 'hF)
+            mask <= 'hFFFFFFFFFFFFFF000000;
+          else if (senha[7*4 +:4] == 'hF)
+            mask <= 'hFFFFFFFFFFFFF0000000;
+          else if (senha[8*4 +:4] == 'hF)
+            mask <= 'hFFFFFFFFFFFF00000000;
+          else if (senha[9*4 +:4] == 'hF)
+            mask <= 'hFFFFFFFFFFF000000000;
+          else if (senha[10*4 +:4] == 'hF)
+            mask <= 'hFFFFFFFFFF0000000000;
+          else if (senha[11*4 +:4] == 'hF)
+            mask <= 'hFFFFFFFFF00000000000;
+          else if (senha[12*4 +:4] == 'hF)
+            mask <= 'hFFFFFFFF000000000000;
+          else 	mask <= 80'hFFFFFFFFFFFFFFFFFFFF;
+
+          senha_valida3 <= ((((~((~digitos_value)>>(0*4)))|mask)==senha) |
+            (((~((~digitos_value)>>(1*4)))|mask)==senha) |
+            (((~((~digitos_value)>>(2*4)))|mask)==senha) |
+            (((~((~digitos_value)>>(3*4)))|mask)==senha) |
+            (((~((~digitos_value)>>(4*4)))|mask)==senha) |
+            (((~((~digitos_value)>>(5*4)))|mask)==senha) |
+            (((~((~digitos_value)>>(6*4)))|mask)==senha) |
+            (((~((~digitos_value)>>(7*4)))|mask)==senha) |
+            (((~((~digitos_value)>>(8*4)))|mask)==senha) |
+            (((~((~digitos_value)>>(9*4)))|mask)==senha) |
+            (((~((~digitos_value)>>(10*4)))|mask)==senha) |
+            (((~((~digitos_value)>>(11*4)))|mask)==senha) |
+            (((~((~digitos_value)>>(12*4)))|mask)==senha) |
+            (((~((~digitos_value)>>(13*4)))|mask)==senha) |
+            (((~((~digitos_value)>>(14*4)))|mask)==senha) |
+            (((~((~digitos_value)>>(15*4)))|mask)==senha) |
+            (((~((~digitos_value)>>(16*4)))|mask)==senha));
+          //Validar senha 4
+          senha <= data_setup_new.senha_4.digits;
+          if (senha[3*4 +:4] == 'hF)
+            mask <= 'hFFFFFFFFFFFFFFFFFFFF;
+          else if (senha[4*4 +:4] == 'hF)
+            mask <= 'hFFFFFFFFFFFFFFFF0000;
+          else if (senha[5*4 +:4] == 'hF)
+            mask <= 'hFFFFFFFFFFFFFFF00000;
+          else if (senha[6*4 +:4] == 'hF)
+            mask <= 'hFFFFFFFFFFFFFF000000;
+          else if (senha[7*4 +:4] == 'hF)
+            mask <= 'hFFFFFFFFFFFFF0000000;
+          else if (senha[8*4 +:4] == 'hF)
+            mask <= 'hFFFFFFFFFFFF00000000;
+          else if (senha[9*4 +:4] == 'hF)
+            mask <= 'hFFFFFFFFFFF000000000;
+          else if (senha[10*4 +:4] == 'hF)
+            mask <= 'hFFFFFFFFFF0000000000;
+          else if (senha[11*4 +:4] == 'hF)
+            mask <= 'hFFFFFFFFF00000000000;
+          else if (senha[12*4 +:4] == 'hF)
+            mask <= 'hFFFFFFFF000000000000;
+          else 	mask <= 80'hFFFFFFFFFFFFFFFFFFFF;
+
+          senha_valida4 <= ((((~((~digitos_value)>>(0*4)))|mask)==senha) |
+            (((~((~digitos_value)>>(1*4)))|mask)==senha) |
+            (((~((~digitos_value)>>(2*4)))|mask)==senha) |
+            (((~((~digitos_value)>>(3*4)))|mask)==senha) |
+            (((~((~digitos_value)>>(4*4)))|mask)==senha) |
+            (((~((~digitos_value)>>(5*4)))|mask)==senha) |
+            (((~((~digitos_value)>>(6*4)))|mask)==senha) |
+            (((~((~digitos_value)>>(7*4)))|mask)==senha) |
+            (((~((~digitos_value)>>(8*4)))|mask)==senha) |
+            (((~((~digitos_value)>>(9*4)))|mask)==senha) |
+            (((~((~digitos_value)>>(10*4)))|mask)==senha) |
+            (((~((~digitos_value)>>(11*4)))|mask)==senha) |
+            (((~((~digitos_value)>>(12*4)))|mask)==senha) |
+            (((~((~digitos_value)>>(13*4)))|mask)==senha) |
+            (((~((~digitos_value)>>(14*4)))|mask)==senha) |
+            (((~((~digitos_value)>>(15*4)))|mask)==senha) |
+            (((~((~digitos_value)>>(16*4)))|mask)==senha));
           if (senha_certa) begin
             estado <= porta_encostada;
             contFechado <= 0;
           end
           else begin
             estado <= senha_errada;
+            cont <= 0;
           end
         end
         bipar_senha_incompleta: begin
@@ -171,6 +336,9 @@ module operacional#(
             estado <= porta_encostada;
             contFechado <= 0;
           end
+          else if(botao_config) begin
+            estado <= leitura_senha_master;
+          end
         end
         debounce_nao_pertube: begin
           if (cont >= DEBOUNCE) begin
@@ -180,7 +348,7 @@ module operacional#(
             estado <= porta_trancada;
           end
           else begin
-            cont++;
+            cont <= cont + 1;
           end
         end
         debounce_sair_nao_pertube: begin
@@ -192,7 +360,7 @@ module operacional#(
             estado <= nao_pertube;
           end
           else begin
-            cont++;
+            cont <= cont + 1;
           end
         end
         debounce_trancar: begin
@@ -203,7 +371,7 @@ module operacional#(
             estado <= porta_encostada;
           end
           else begin
-            cont++;
+            cont <= cont +1;
           end
         end
         debounce_destrancar: begin
@@ -215,8 +383,64 @@ module operacional#(
             estado <= porta_trancada;
           end
           else begin
-            cont++;
+            cont <= cont + 1;
           end
+        end
+        leitura_senha_master: begin
+          if(exit_setup) begin
+            estado <= porta_aberta;
+          end
+          else if(confirmar) begin
+            estado <= validar_senha_master;
+          end
+        end
+        validar_senha_master: begin
+          //Validar senha master
+          senha <= data_setup_new.senha_master.digits;
+          if (senha[3*4 +:4] == 'hF)
+            mask <= 'hFFFFFFFFFFFFFFFFFFFF;
+          else if (senha[4*4 +:4] == 'hF)
+            mask <= 'hFFFFFFFFFFFFFFFF0000;
+          else if (senha[5*4 +:4] == 'hF)
+            mask <= 'hFFFFFFFFFFFFFFF00000;
+          else if (senha[6*4 +:4] == 'hF)
+            mask <= 'hFFFFFFFFFFFFFF000000;
+          else if (senha[7*4 +:4] == 'hF)
+            mask <= 'hFFFFFFFFFFFFF0000000;
+          else if (senha[8*4 +:4] == 'hF)
+            mask <= 'hFFFFFFFFFFFF00000000;
+          else if (senha[9*4 +:4] == 'hF)
+            mask <= 'hFFFFFFFFFFF000000000;
+          else if (senha[10*4 +:4] == 'hF)
+            mask <= 'hFFFFFFFFFF0000000000;
+          else if (senha[11*4 +:4] == 'hF)
+            mask <= 'hFFFFFFFFF00000000000;
+          else if (senha[12*4 +:4] == 'hF)
+            mask <= 'hFFFFFFFF000000000000;
+          else 	mask <= 80'hFFFFFFFFFFFFFFFFFFFF;
+
+          senha_master_valida <= ((((~((~digitos_value)>>(0*4)))|mask)==senha) |
+            (((~((~digitos_value)>>(1*4)))|mask)==senha) |
+            (((~((~digitos_value)>>(2*4)))|mask)==senha) |
+            (((~((~digitos_value)>>(3*4)))|mask)==senha) |
+            (((~((~digitos_value)>>(4*4)))|mask)==senha) |
+            (((~((~digitos_value)>>(5*4)))|mask)==senha) |
+            (((~((~digitos_value)>>(6*4)))|mask)==senha) |
+            (((~((~digitos_value)>>(7*4)))|mask)==senha) |
+            (((~((~digitos_value)>>(8*4)))|mask)==senha) |
+            (((~((~digitos_value)>>(9*4)))|mask)==senha) |
+            (((~((~digitos_value)>>(10*4)))|mask)==senha) |
+            (((~((~digitos_value)>>(11*4)))|mask)==senha) |
+            (((~((~digitos_value)>>(12*4)))|mask)==senha) |
+            (((~((~digitos_value)>>(13*4)))|mask)==senha) |
+            (((~((~digitos_value)>>(14*4)))|mask)==senha) |
+            (((~((~digitos_value)>>(15*4)))|mask)==senha) |
+            (((~((~digitos_value)>>(16*4)))|mask)==senha));
+
+          if(senha_master_valida) begin
+            estado <= setup;
+          end
+          else estado <= leitura_senha_master;
         end
         default: estado <= reset;
       endcase
@@ -269,7 +493,7 @@ module operacional#(
         setup: begin
           bcd_pac = 'hBBBBBB;
           teclado_en = 1;
-          display_en = 0;
+          display_en = 1;
           setup_on = 1;
           tranca = 0;
           bip = 0;
@@ -358,6 +582,22 @@ module operacional#(
           display_en = 1;
           setup_on = 0;
           tranca = 1;
+          bip = 0;
+        end
+        leitura_senha_master: begin
+          bcd_pac = 'h0BBBBB;
+          teclado_en = 1;
+          display_en = 1;
+          setup_on = 0;
+          tranca = 0;
+          bip = 0;
+        end
+        validar_senha_master: begin
+          bcd_pac = 'h0BBBBB;
+          teclado_en = 0;
+          display_en = 1;
+          setup_on = 0;
+          tranca = 0;
           bip = 0;
         end
       endcase
