@@ -199,27 +199,27 @@ output		logic 		digitos_valid
       end
       inserirNoArray: begin
         if (nova_tecla) begin
-                  digitos_value.digits[0]  = digitos_value.digits[1];
-                  digitos_value.digits[1]  = digitos_value.digits[2];
-                  digitos_value.digits[2]  = digitos_value.digits[3];
-                  digitos_value.digits[3]  = digitos_value.digits[4];
-                  digitos_value.digits[4]  = digitos_value.digits[5];
-                  digitos_value.digits[5]  = digitos_value.digits[6];
-                  digitos_value.digits[6]  = digitos_value.digits[7];
-                  digitos_value.digits[7]  = digitos_value.digits[8];
-                  digitos_value.digits[8]  = digitos_value.digits[9];
-                  digitos_value.digits[9]  = digitos_value.digits[10];
-                  digitos_value.digits[10] = digitos_value.digits[11];
-                  digitos_value.digits[11] = digitos_value.digits[12];
-                  digitos_value.digits[12] = digitos_value.digits[13];
-                  digitos_value.digits[13] = digitos_value.digits[14];
-                  digitos_value.digits[14] = digitos_value.digits[15];
-                  digitos_value.digits[15] = digitos_value.digits[16];
-                  digitos_value.digits[16] = digitos_value.digits[17];
-                  digitos_value.digits[17] = digitos_value.digits[18];
-                  digitos_value.digits[18] = digitos_value.digits[19];
+                  digitos_value.digits[19]  = digitos_value.digits[18];
+                  digitos_value.digits[18]  = digitos_value.digits[17];
+                  digitos_value.digits[17]  = digitos_value.digits[16];
+                  digitos_value.digits[16]  = digitos_value.digits[15];
+                  digitos_value.digits[15]  = digitos_value.digits[14];
+                  digitos_value.digits[14]  = digitos_value.digits[13];
+                  digitos_value.digits[13]  = digitos_value.digits[12];
+                  digitos_value.digits[12]  = digitos_value.digits[11];
+                  digitos_value.digits[11]  = digitos_value.digits[10];
+                  digitos_value.digits[10]  = digitos_value.digits[9];
+                  digitos_value.digits[9] = digitos_value.digits[8];
+                  digitos_value.digits[8] = digitos_value.digits[7];
+                  digitos_value.digits[7] = digitos_value.digits[6];
+                  digitos_value.digits[6] = digitos_value.digits[5];
+                  digitos_value.digits[5] = digitos_value.digits[4];
+                  digitos_value.digits[4] = digitos_value.digits[3];
+                  digitos_value.digits[3] = digitos_value.digits[2];
+                  digitos_value.digits[2] = digitos_value.digits[1];
+                  digitos_value.digits[1] = digitos_value.digits[0];
 
-                  digitos_value.digits[19] = tecla_lida;
+                  digitos_value.digits[0] = tecla_lida;
                 end
       end
       tecladoDesativado: begin
