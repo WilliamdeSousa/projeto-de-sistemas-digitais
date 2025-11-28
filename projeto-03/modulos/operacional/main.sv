@@ -212,77 +212,77 @@ module operacional#(
         end
         validar_senha: begin
           if ((
-              (((~((~digitos_value)>>(0*4 )))|mask1)==senha1) |
-              (((~((~digitos_value)>>(1*4 )))|mask1)==senha1) |
-              (((~((~digitos_value)>>(2*4 )))|mask1)==senha1) |
-              (((~((~digitos_value)>>(3*4 )))|mask1)==senha1) |
-              (((~((~digitos_value)>>(4*4 )))|mask1)==senha1) |
-              (((~((~digitos_value)>>(5*4 )))|mask1)==senha1) |
-              (((~((~digitos_value)>>(6*4 )))|mask1)==senha1) |
-              (((~((~digitos_value)>>(7*4 )))|mask1)==senha1) |
-              (((~((~digitos_value)>>(8*4 )))|mask1)==senha1) |
-              (((~((~digitos_value)>>(9*4 )))|mask1)==senha1) |
-              (((~((~digitos_value)>>(10*4)))|mask1)==senha1) |
-              (((~((~digitos_value)>>(11*4)))|mask1)==senha1) |
-              (((~((~digitos_value)>>(12*4)))|mask1)==senha1) |
-              (((~((~digitos_value)>>(13*4)))|mask1)==senha1) |
-              (((~((~digitos_value)>>(14*4)))|mask1)==senha1) |
-              (((~((~digitos_value)>>(15*4)))|mask1)==senha1) |
-              (((~((~digitos_value)>>(16*4)))|mask1)==senha1)
-            ) || (
-              (((~((~digitos_value)>>(0*4 )))|mask2)==senha2) |
-              (((~((~digitos_value)>>(1*4 )))|mask2)==senha2) |
-              (((~((~digitos_value)>>(2*4 )))|mask2)==senha2) |
-              (((~((~digitos_value)>>(3*4 )))|mask2)==senha2) |
-              (((~((~digitos_value)>>(4*4 )))|mask2)==senha2) |
-              (((~((~digitos_value)>>(5*4 )))|mask2)==senha2) |
-              (((~((~digitos_value)>>(6*4 )))|mask2)==senha2) |
-              (((~((~digitos_value)>>(7*4 )))|mask2)==senha2) |
-              (((~((~digitos_value)>>(8*4 )))|mask2)==senha2) |
-              (((~((~digitos_value)>>(9*4 )))|mask2)==senha2) |
-              (((~((~digitos_value)>>(10*4)))|mask2)==senha2) |
-              (((~((~digitos_value)>>(11*4)))|mask2)==senha2) |
-              (((~((~digitos_value)>>(12*4)))|mask2)==senha2) |
-              (((~((~digitos_value)>>(13*4)))|mask2)==senha2) |
-              (((~((~digitos_value)>>(14*4)))|mask2)==senha2) |
-              (((~((~digitos_value)>>(15*4)))|mask2)==senha2) |
-              (((~((~digitos_value)>>(16*4)))|mask2)==senha2)
-            ) || (
-              (((~((~digitos_value)>>(0*4 )))|mask3)==senha3) |
-              (((~((~digitos_value)>>(1*4 )))|mask3)==senha3) |
-              (((~((~digitos_value)>>(2*4 )))|mask3)==senha3) |
-              (((~((~digitos_value)>>(3*4 )))|mask3)==senha3) |
-              (((~((~digitos_value)>>(4*4 )))|mask3)==senha3) |
-              (((~((~digitos_value)>>(5*4 )))|mask3)==senha3) |
-              (((~((~digitos_value)>>(6*4 )))|mask3)==senha3) |
-              (((~((~digitos_value)>>(7*4 )))|mask3)==senha3) |
-              (((~((~digitos_value)>>(8*4 )))|mask3)==senha3) |
-              (((~((~digitos_value)>>(9*4 )))|mask3)==senha3) |
-              (((~((~digitos_value)>>(10*4)))|mask3)==senha3) |
-              (((~((~digitos_value)>>(11*4)))|mask3)==senha3) |
-              (((~((~digitos_value)>>(12*4)))|mask3)==senha3) |
-              (((~((~digitos_value)>>(13*4)))|mask3)==senha3) |
-              (((~((~digitos_value)>>(14*4)))|mask3)==senha3) |
-              (((~((~digitos_value)>>(15*4)))|mask3)==senha3) |
-              (((~((~digitos_value)>>(16*4)))|mask3)==senha3)
-            ) || (
-              (((~((~digitos_value)>>(0*4 )))|mask4)==senha4) |
-              (((~((~digitos_value)>>(1*4 )))|mask4)==senha4) |
-              (((~((~digitos_value)>>(2*4 )))|mask4)==senha4) |
-              (((~((~digitos_value)>>(3*4 )))|mask4)==senha4) |
-              (((~((~digitos_value)>>(4*4 )))|mask4)==senha4) |
-              (((~((~digitos_value)>>(5*4 )))|mask4)==senha4) |
-              (((~((~digitos_value)>>(6*4 )))|mask4)==senha4) |
-              (((~((~digitos_value)>>(7*4 )))|mask4)==senha4) |
-              (((~((~digitos_value)>>(8*4 )))|mask4)==senha4) |
-              (((~((~digitos_value)>>(9*4 )))|mask4)==senha4) |
-              (((~((~digitos_value)>>(10*4)))|mask4)==senha4) |
-              (((~((~digitos_value)>>(11*4)))|mask4)==senha4) |
-              (((~((~digitos_value)>>(12*4)))|mask4)==senha4) |
-              (((~((~digitos_value)>>(13*4)))|mask4)==senha4) |
-              (((~((~digitos_value)>>(14*4)))|mask4)==senha4) |
-              (((~((~digitos_value)>>(15*4)))|mask4)==senha4) |
-              (((~((~digitos_value)>>(16*4)))|mask4)==senha4)
+            (((~((~digitos_value)>>(0*4 )))|mask1)==data_setup_new.senha_1) |
+            (((~((~digitos_value)>>(1*4 )))|mask1)==data_setup_new.senha_1) |
+            (((~((~digitos_value)>>(2*4 )))|mask1)==data_setup_new.senha_1) |
+            (((~((~digitos_value)>>(3*4 )))|mask1)==data_setup_new.senha_1) |
+            (((~((~digitos_value)>>(4*4 )))|mask1)==data_setup_new.senha_1) |
+            (((~((~digitos_value)>>(5*4 )))|mask1)==data_setup_new.senha_1) |
+            (((~((~digitos_value)>>(6*4 )))|mask1)==data_setup_new.senha_1) |
+            (((~((~digitos_value)>>(7*4 )))|mask1)==data_setup_new.senha_1) |
+            (((~((~digitos_value)>>(8*4 )))|mask1)==data_setup_new.senha_1) |
+            (((~((~digitos_value)>>(9*4 )))|mask1)==data_setup_new.senha_1) |
+            (((~((~digitos_value)>>(10*4)))|mask1)==data_setup_new.senha_1) |
+            (((~((~digitos_value)>>(11*4)))|mask1)==data_setup_new.senha_1) |
+            (((~((~digitos_value)>>(12*4)))|mask1)==data_setup_new.senha_1) |
+            (((~((~digitos_value)>>(13*4)))|mask1)==data_setup_new.senha_1) |
+            (((~((~digitos_value)>>(14*4)))|mask1)==data_setup_new.senha_1) |
+            (((~((~digitos_value)>>(15*4)))|mask1)==data_setup_new.senha_1) |
+            (((~((~digitos_value)>>(16*4)))|mask1)==data_setup_new.senha_1)
+          ) || (
+            (((~((~digitos_value)>>(0*4 )))|mask2)==data_setup_new.senha_2) |
+            (((~((~digitos_value)>>(1*4 )))|mask2)==data_setup_new.senha_2) |
+            (((~((~digitos_value)>>(2*4 )))|mask2)==data_setup_new.senha_2) |
+            (((~((~digitos_value)>>(3*4 )))|mask2)==data_setup_new.senha_2) |
+            (((~((~digitos_value)>>(4*4 )))|mask2)==data_setup_new.senha_2) |
+            (((~((~digitos_value)>>(5*4 )))|mask2)==data_setup_new.senha_2) |
+            (((~((~digitos_value)>>(6*4 )))|mask2)==data_setup_new.senha_2) |
+            (((~((~digitos_value)>>(7*4 )))|mask2)==data_setup_new.senha_2) |
+            (((~((~digitos_value)>>(8*4 )))|mask2)==data_setup_new.senha_2) |
+            (((~((~digitos_value)>>(9*4 )))|mask2)==data_setup_new.senha_2) |
+            (((~((~digitos_value)>>(10*4)))|mask2)==data_setup_new.senha_2) |
+            (((~((~digitos_value)>>(11*4)))|mask2)==data_setup_new.senha_2) |
+            (((~((~digitos_value)>>(12*4)))|mask2)==data_setup_new.senha_2) |
+            (((~((~digitos_value)>>(13*4)))|mask2)==data_setup_new.senha_2) |
+            (((~((~digitos_value)>>(14*4)))|mask2)==data_setup_new.senha_2) |
+            (((~((~digitos_value)>>(15*4)))|mask2)==data_setup_new.senha_2) |
+            (((~((~digitos_value)>>(16*4)))|mask2)==data_setup_new.senha_2)
+          ) || (
+            (((~((~digitos_value)>>(0*4 )))|mask3)==data_setup_new.senha_3) |
+            (((~((~digitos_value)>>(1*4 )))|mask3)==data_setup_new.senha_3) |
+            (((~((~digitos_value)>>(2*4 )))|mask3)==data_setup_new.senha_3) |
+            (((~((~digitos_value)>>(3*4 )))|mask3)==data_setup_new.senha_3) |
+            (((~((~digitos_value)>>(4*4 )))|mask3)==data_setup_new.senha_3) |
+            (((~((~digitos_value)>>(5*4 )))|mask3)==data_setup_new.senha_3) |
+            (((~((~digitos_value)>>(6*4 )))|mask3)==data_setup_new.senha_3) |
+            (((~((~digitos_value)>>(7*4 )))|mask3)==data_setup_new.senha_3) |
+            (((~((~digitos_value)>>(8*4 )))|mask3)==data_setup_new.senha_3) |
+            (((~((~digitos_value)>>(9*4 )))|mask3)==data_setup_new.senha_3) |
+            (((~((~digitos_value)>>(10*4)))|mask3)==data_setup_new.senha_3) |
+            (((~((~digitos_value)>>(11*4)))|mask3)==data_setup_new.senha_3) |
+            (((~((~digitos_value)>>(12*4)))|mask3)==data_setup_new.senha_3) |
+            (((~((~digitos_value)>>(13*4)))|mask3)==data_setup_new.senha_3) |
+            (((~((~digitos_value)>>(14*4)))|mask3)==data_setup_new.senha_3) |
+            (((~((~digitos_value)>>(15*4)))|mask3)==data_setup_new.senha_3) |
+            (((~((~digitos_value)>>(16*4)))|mask3)==data_setup_new.senha_3)
+          ) || (
+            (((~((~digitos_value)>>(0*4 )))|mask4)==data_setup_new.senha_4) |
+            (((~((~digitos_value)>>(1*4 )))|mask4)==data_setup_new.senha_4) |
+            (((~((~digitos_value)>>(2*4 )))|mask4)==data_setup_new.senha_4) |
+            (((~((~digitos_value)>>(3*4 )))|mask4)==data_setup_new.senha_4) |
+            (((~((~digitos_value)>>(4*4 )))|mask4)==data_setup_new.senha_4) |
+            (((~((~digitos_value)>>(5*4 )))|mask4)==data_setup_new.senha_4) |
+            (((~((~digitos_value)>>(6*4 )))|mask4)==data_setup_new.senha_4) |
+            (((~((~digitos_value)>>(7*4 )))|mask4)==data_setup_new.senha_4) |
+            (((~((~digitos_value)>>(8*4 )))|mask4)==data_setup_new.senha_4) |
+            (((~((~digitos_value)>>(9*4 )))|mask4)==data_setup_new.senha_4) |
+            (((~((~digitos_value)>>(10*4)))|mask4)==data_setup_new.senha_4) |
+            (((~((~digitos_value)>>(11*4)))|mask4)==data_setup_new.senha_4) |
+            (((~((~digitos_value)>>(12*4)))|mask4)==data_setup_new.senha_4) |
+            (((~((~digitos_value)>>(13*4)))|mask4)==data_setup_new.senha_4) |
+            (((~((~digitos_value)>>(14*4)))|mask4)==data_setup_new.senha_4) |
+            (((~((~digitos_value)>>(15*4)))|mask4)==data_setup_new.senha_4) |
+            (((~((~digitos_value)>>(16*4)))|mask4)==data_setup_new.senha_4)
           )) begin
             estado <= porta_encostada;
             contFechado <= 0;
