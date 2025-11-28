@@ -1,15 +1,15 @@
 typedef struct packed {
-    logic [19:0] [3:0] digits;
-    } senhaPac_t;
+  logic [19:0] [3:0] digits;
+} senhaPac_t;
 
 module decodificador_de_teclado (
-input 		logic		clk,
-input		logic		rst,
-input		logic 		enable,
-input 		logic [3:0] 	col_matriz,
-output 	logic [3:0] 	lin_matriz,
-output 	senhaPac_t	digitos_value,
-output		logic 		digitos_valid
+  input 	logic		    clk,
+  input	  logic		    rst,
+  input	  logic 		  enable,
+  input 	logic [3:0] col_matriz,
+  output  logic [3:0] lin_matriz,
+  output 	senhaPac_t	digitos_value,
+  output	logic 		  digitos_valid
 );
 
   logic [3:0] col_lida;
@@ -30,9 +30,9 @@ output		logic 		digitos_valid
     reset,
     inserirNoArray,
     tecladoDesativado
-    } estado;
+  } estado;
 
-  logic [12:0] ta;
+  logic [6:0] ta; // 0 - 127
   logic [6:0] td; // 0 - 127
   assign c0 = col_matriz == 4'b0111 || col_matriz == 4'b1011 || col_matriz == 4'b1101 || col_matriz == 4'b1110;
   assign c1 = col_matriz == 4'b1111;
