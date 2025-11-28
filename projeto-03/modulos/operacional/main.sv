@@ -34,8 +34,7 @@ module operacional#(
     nao_pertube,
     senha_errada,
     validar_mask,
-    formatarSenhasCertas,
-    comparar_mask,
+    carregar_senhas,
     validar_senha,
     validar_senhadenovo,
     bipar_senha_incompleta,
@@ -48,10 +47,8 @@ module operacional#(
     validar_senha_master
   } estado;
   logic [4:0] cont, contFechado, tent;
-  logic [79:0] senha1, senha2, senha3, senha4, mask1, mask2, mask3, mask4;
-  logic [79:0] digitos_flat;
-  assign digitos_flat = {digitos_value.digits};
-  logic senha_valida1, senha_valida2, senha_valida3, senha_valida4, senha_master_valida, senha_certa;
+  logic [79:0] mask1, mask2, mask3, mask4, mask_master;
+  logic senha_certa;
 
   assign exit_setup = (digitos_value.digits[0] == 'hB);
   assign erro_teclado = digitos_valid && (digitos_value.digits[0] == 'hE);
@@ -86,7 +83,7 @@ module operacional#(
             cont <= 0;
           end
           else if (confirmar) begin
-            estado <= formatarSenhasCertas;
+            estado <= carregar_senhas;
             tent <= tent + 1;
           end
         end
@@ -123,6 +120,65 @@ module operacional#(
         end
         setup: begin
           if (data_setup_ok) begin
+            if      (data_setup_new.senha_1.digits[3*4  +:4] == 'hF)  mask1 <= 80'hFFFFFFFFFFFFFFFFFFFF;
+            else if (data_setup_new.senha_1.digits[4*4  +:4] == 'hF)  mask1 <= 80'hFFFFFFFFFFFFFFFF0000;
+            else if (data_setup_new.senha_1.digits[5*4  +:4] == 'hF)  mask1 <= 80'hFFFFFFFFFFFFFFF00000;
+            else if (data_setup_new.senha_1.digits[6*4  +:4] == 'hF)  mask1 <= 80'hFFFFFFFFFFFFFF000000;
+            else if (data_setup_new.senha_1.digits[7*4  +:4] == 'hF)  mask1 <= 80'hFFFFFFFFFFFFF0000000;
+            else if (data_setup_new.senha_1.digits[8*4  +:4] == 'hF)  mask1 <= 80'hFFFFFFFFFFFF00000000;
+            else if (data_setup_new.senha_1.digits[9*4  +:4] == 'hF)  mask1 <= 80'hFFFFFFFFFFF000000000;
+            else if (data_setup_new.senha_1.digits[10*4 +:4] == 'hF)  mask1 <= 80'hFFFFFFFFFF0000000000;
+            else if (data_setup_new.senha_1.digits[11*4 +:4] == 'hF)  mask1 <= 80'hFFFFFFFFF00000000000;
+            else if (data_setup_new.senha_1.digits[12*4 +:4] == 'hF)  mask1 <= 80'hFFFFFFFF000000000000;
+            else 	                                                    mask1 <= 80'hFFFFFFFFFFFFFFFFFFFF;
+
+            if      (data_setup_new.senha_2.digits[3*4  +:4] == 'hF)  mask2 <= 80'hFFFFFFFFFFFFFFFFFFFF;
+            else if (data_setup_new.senha_2.digits[4*4  +:4] == 'hF)  mask2 <= 80'hFFFFFFFFFFFFFFFF0000;
+            else if (data_setup_new.senha_2.digits[5*4  +:4] == 'hF)  mask2 <= 80'hFFFFFFFFFFFFFFF00000;
+            else if (data_setup_new.senha_2.digits[6*4  +:4] == 'hF)  mask2 <= 80'hFFFFFFFFFFFFFF000000;
+            else if (data_setup_new.senha_2.digits[7*4  +:4] == 'hF)  mask2 <= 80'hFFFFFFFFFFFFF0000000;
+            else if (data_setup_new.senha_2.digits[8*4  +:4] == 'hF)  mask2 <= 80'hFFFFFFFFFFFF00000000;
+            else if (data_setup_new.senha_2.digits[9*4  +:4] == 'hF)  mask2 <= 80'hFFFFFFFFFFF000000000;
+            else if (data_setup_new.senha_2.digits[10*4 +:4] == 'hF)  mask2 <= 80'hFFFFFFFFFF0000000000;
+            else if (data_setup_new.senha_2.digits[11*4 +:4] == 'hF)  mask2 <= 80'hFFFFFFFFF00000000000;
+            else if (data_setup_new.senha_2.digits[12*4 +:4] == 'hF)  mask2 <= 80'hFFFFFFFF000000000000;
+            else 	                                                    mask2 <= 80'hFFFFFFFFFFFFFFFFFFFF;
+
+            if      (data_setup_new.senha_3.digits[3*4  +:4] == 'hF)  mask3 <= 80'hFFFFFFFFFFFFFFFFFFFF;
+            else if (data_setup_new.senha_3.digits[4*4  +:4] == 'hF)  mask3 <= 80'hFFFFFFFFFFFFFFFF0000;
+            else if (data_setup_new.senha_3.digits[5*4  +:4] == 'hF)  mask3 <= 80'hFFFFFFFFFFFFFFF00000;
+            else if (data_setup_new.senha_3.digits[6*4  +:4] == 'hF)  mask3 <= 80'hFFFFFFFFFFFFFF000000;
+            else if (data_setup_new.senha_3.digits[7*4  +:4] == 'hF)  mask3 <= 80'hFFFFFFFFFFFFF0000000;
+            else if (data_setup_new.senha_3.digits[8*4  +:4] == 'hF)  mask3 <= 80'hFFFFFFFFFFFF00000000;
+            else if (data_setup_new.senha_3.digits[9*4  +:4] == 'hF)  mask3 <= 80'hFFFFFFFFFFF000000000;
+            else if (data_setup_new.senha_3.digits[10*4 +:4] == 'hF)  mask3 <= 80'hFFFFFFFFFF0000000000;
+            else if (data_setup_new.senha_3.digits[11*4 +:4] == 'hF)  mask3 <= 80'hFFFFFFFFF00000000000;
+            else if (data_setup_new.senha_3.digits[12*4 +:4] == 'hF)  mask3 <= 80'hFFFFFFFF000000000000;
+            else 	                                                    mask3 <= 80'hFFFFFFFFFFFFFFFFFFFF;
+
+            if      (data_setup_new.senha_4.digits[3*4  +:4] == 'hF)  mask4 <= 80'hFFFFFFFFFFFFFFFFFFFF;
+            else if (data_setup_new.senha_4.digits[4*4  +:4] == 'hF)  mask4 <= 80'hFFFFFFFFFFFFFFFF0000;
+            else if (data_setup_new.senha_4.digits[5*4  +:4] == 'hF)  mask4 <= 80'hFFFFFFFFFFFFFFF00000;
+            else if (data_setup_new.senha_4.digits[6*4  +:4] == 'hF)  mask4 <= 80'hFFFFFFFFFFFFFF000000;
+            else if (data_setup_new.senha_4.digits[7*4  +:4] == 'hF)  mask4 <= 80'hFFFFFFFFFFFFF0000000;
+            else if (data_setup_new.senha_4.digits[8*4  +:4] == 'hF)  mask4 <= 80'hFFFFFFFFFFFF00000000;
+            else if (data_setup_new.senha_4.digits[9*4  +:4] == 'hF)  mask4 <= 80'hFFFFFFFFFFF000000000;
+            else if (data_setup_new.senha_4.digits[10*4 +:4] == 'hF)  mask4 <= 80'hFFFFFFFFFF0000000000;
+            else if (data_setup_new.senha_4.digits[11*4 +:4] == 'hF)  mask4 <= 80'hFFFFFFFFF00000000000;
+            else if (data_setup_new.senha_4.digits[12*4 +:4] == 'hF)  mask4 <= 80'hFFFFFFFF000000000000;
+            else 	                                                    mask4 <= 80'hFFFFFFFFFFFFFFFFFFFF;
+
+            if      (data_setup_new.senha_master.digits[3*4  +:4] == 'hF) mask_master <= 80'hFFFFFFFFFFFFFFFFFFFF;
+            else if (data_setup_new.senha_master.digits[4*4  +:4] == 'hF) mask_master <= 80'hFFFFFFFFFFFFFFFF0000;
+            else if (data_setup_new.senha_master.digits[5*4  +:4] == 'hF) mask_master <= 80'hFFFFFFFFFFFFFFF00000;
+            else if (data_setup_new.senha_master.digits[6*4  +:4] == 'hF) mask_master <= 80'hFFFFFFFFFFFFFF000000;
+            else if (data_setup_new.senha_master.digits[7*4  +:4] == 'hF) mask_master <= 80'hFFFFFFFFFFFFF0000000;
+            else if (data_setup_new.senha_master.digits[8*4  +:4] == 'hF) mask_master <= 80'hFFFFFFFFFFFF00000000;
+            else if (data_setup_new.senha_master.digits[9*4  +:4] == 'hF) mask_master <= 80'hFFFFFFFFFFF000000000;
+            else if (data_setup_new.senha_master.digits[10*4 +:4] == 'hF) mask_master <= 80'hFFFFFFFFFF0000000000;
+            else if (data_setup_new.senha_master.digits[11*4 +:4] == 'hF) mask_master <= 80'hFFFFFFFFF00000000000;
+            else if (data_setup_new.senha_master.digits[12*4 +:4] == 'hF) mask_master <= 80'hFFFFFFFF000000000000;
+            else 	                                                        mask_master <= 80'hFFFFFFFFFFFFFFFFFFFF;
             estado <= porta_aberta;
           end
         end
@@ -154,184 +210,80 @@ module operacional#(
             cont <= 0;
           end
         end
-        formatarSenhasCertas: begin
-          senha1 <= data_setup_new.senha_1.digits;
-          senha2 <= data_setup_new.senha_2.digits;
-          senha3 <= data_setup_new.senha_3.digits;
-          senha4 <= data_setup_new.senha_4.digits;
-          estado <= validar_mask;
-        end
-        validar_mask: begin
-
-          if (senha1[3*4 +:4] == 'hF)
-            mask1 <= 'hFFFFFFFFFFFFFFFFFFFF;
-          else if (senha1[4*4 +:4] == 'hF)
-            mask1 <= 'hFFFFFFFFFFFFFFFF0000;
-          else if (senha1[5*4 +:4] == 'hF)
-            mask1 <= 'hFFFFFFFFFFFFFFF00000;
-          else if (senha1[6*4 +:4] == 'hF)
-            mask1 <= 'hFFFFFFFFFFFFFF000000;
-          else if (senha1[7*4 +:4] == 'hF)
-            mask1 <= 'hFFFFFFFFFFFFF0000000;
-          else if (senha1[8*4 +:4] == 'hF)
-            mask1 <= 'hFFFFFFFFFFFF00000000;
-          else if (senha1[9*4 +:4] == 'hF)
-            mask1 <= 'hFFFFFFFFFFF000000000;
-          else if (senha1[10*4 +:4] == 'hF)
-            mask1 <= 'hFFFFFFFFFF0000000000;
-          else if (senha1[11*4 +:4] == 'hF)
-            mask1 <= 'hFFFFFFFFF00000000000;
-          else if (senha1[12*4 +:4] == 'hF)
-            mask1 <= 'hFFFFFFFF000000000000;
-          else 	mask1 <= 80'hFFFFFFFFFFFFFFFFFFFF;
-
-          if (senha2[3*4 +:4] == 'hF)
-            mask2 <= 'hFFFFFFFFFFFFFFFFFFFF;
-          else if (senha2[4*4 +:4] == 'hF)
-            mask2 <= 'hFFFFFFFFFFFFFFFF0000;
-          else if (senha2[5*4 +:4] == 'hF)
-            mask2 <= 'hFFFFFFFFFFFFFFF00000;
-          else if (senha2[6*4 +:4] == 'hF)
-            mask2 <= 'hFFFFFFFFFFFFFF000000;
-          else if (senha2[7*4 +:4] == 'hF)
-            mask2 <= 'hFFFFFFFFFFFFF0000000;
-          else if (senha2[8*4 +:4] == 'hF)
-            mask2 <= 'hFFFFFFFFFFFF00000000;
-          else if (senha2[9*4 +:4] == 'hF)
-            mask2 <= 'hFFFFFFFFFFF000000000;
-          else if (senha2[10*4 +:4] == 'hF)
-            mask2 <= 'hFFFFFFFFFF0000000000;
-          else if (senha2[11*4 +:4] == 'hF)
-            mask2 <= 'hFFFFFFFFF00000000000;
-          else if (senha2[12*4 +:4] == 'hF)
-            mask2 <= 'hFFFFFFFF000000000000;
-          else 	mask2 <= 80'hFFFFFFFFFFFFFFFFFFFF;
-
-          if (senha3[3*4 +:4] == 'hF)
-            mask3 <= 'hFFFFFFFFFFFFFFFFFFFF;
-          else if (senha3[4*4 +:4] == 'hF)
-            mask3 <= 'hFFFFFFFFFFFFFFFF0000;
-          else if (senha3[5*4 +:4] == 'hF)
-            mask3 <= 'hFFFFFFFFFFFFFFF00000;
-          else if (senha3[6*4 +:4] == 'hF)
-            mask3 <= 'hFFFFFFFFFFFFFF000000;
-          else if (senha3[7*4 +:4] == 'hF)
-            mask3 <= 'hFFFFFFFFFFFFF0000000;
-          else if (senha3[8*4 +:4] == 'hF)
-            mask3 <= 'hFFFFFFFFFFFF00000000;
-          else if (senha3[9*4 +:4] == 'hF)
-            mask3 <= 'hFFFFFFFFFFF000000000;
-          else if (senha3[10*4 +:4] == 'hF)
-            mask3 <= 'hFFFFFFFFFF0000000000;
-          else if (senha3[11*4 +:4] == 'hF)
-            mask3 <= 'hFFFFFFFFF00000000000;
-          else if (senha3[12*4 +:4] == 'hF)
-            mask3 <= 'hFFFFFFFF000000000000;
-          else 	mask3 <= 80'hFFFFFFFFFFFFFFFFFFFF;
-
-          if (senha4[3*4 +:4] == 'hF)
-            mask4 <= 'hFFFFFFFFFFFFFFFFFFFF;
-          else if (senha4[4*4 +:4] == 'hF)
-            mask4 <= 'hFFFFFFFFFFFFFFFF0000;
-          else if (senha4[5*4 +:4] == 'hF)
-            mask4 <= 'hFFFFFFFFFFFFFFF00000;
-          else if (senha4[6*4 +:4] == 'hF)
-            mask4 <= 'hFFFFFFFFFFFFFF000000;
-          else if (senha4[7*4 +:4] == 'hF)
-            mask4 <= 'hFFFFFFFFFFFFF0000000;
-          else if (senha4[8*4 +:4] == 'hF)
-            mask4 <= 'hFFFFFFFFFFFF00000000;
-          else if (senha4[9*4 +:4] == 'hF)
-            mask4 <= 'hFFFFFFFFFFF000000000;
-          else if (senha4[10*4 +:4] == 'hF)
-            mask4 <= 'hFFFFFFFFFF0000000000;
-          else if (senha4[11*4 +:4] == 'hF)
-            mask4 <= 'hFFFFFFFFF00000000000;
-          else if (senha4[12*4 +:4] == 'hF)
-            mask4 <= 'hFFFFFFFF000000000000;
-          else 	mask4 <= 80'hFFFFFFFFFFFFFFFFFFFF;
-          estado <= comparar_mask;
-        end
-        comparar_mask: begin
-          senha_valida1 <= ((((~((~digitos_flat)>>(0*4)))|mask1)==senha1) |
-            (((~((~digitos_flat)>>(1*4)))|mask1)==senha1) |
-            (((~((~digitos_flat)>>(2*4)))|mask1)==senha1) |
-            (((~((~digitos_flat)>>(3*4)))|mask1)==senha1) |
-            (((~((~digitos_flat)>>(4*4)))|mask1)==senha1) |
-            (((~((~digitos_flat)>>(5*4)))|mask1)==senha1) |
-            (((~((~digitos_flat)>>(6*4)))|mask1)==senha1) |
-            (((~((~digitos_flat)>>(7*4)))|mask1)==senha1) |
-            (((~((~digitos_flat)>>(8*4)))|mask1)==senha1) |
-            (((~((~digitos_flat)>>(9*4)))|mask1)==senha1) |
-            (((~((~digitos_flat)>>(10*4)))|mask1)==senha1) |
-            (((~((~digitos_flat)>>(11*4)))|mask1)==senha1) |
-            (((~((~digitos_flat)>>(12*4)))|mask1)==senha1) |
-            (((~((~digitos_flat)>>(13*4)))|mask1)==senha1) |
-            (((~((~digitos_flat)>>(14*4)))|mask1)==senha1) |
-            (((~((~digitos_flat)>>(15*4)))|mask1)==senha1) |
-            (((~((~digitos_flat)>>(16*4)))|mask1)==senha1));
-
-            senha_valida2 <= ((((~((~digitos_value)>>(0*4)))|mask2)==senha2) |
-            (((~((~digitos_value)>>(1*4)))|mask2)==senha2) |
-            (((~((~digitos_value)>>(2*4)))|mask2)==senha2) |
-            (((~((~digitos_value)>>(3*4)))|mask2)==senha2) |
-            (((~((~digitos_value)>>(4*4)))|mask2)==senha2) |
-            (((~((~digitos_value)>>(5*4)))|mask2)==senha2) |
-            (((~((~digitos_value)>>(6*4)))|mask2)==senha2) |
-            (((~((~digitos_value)>>(7*4)))|mask2)==senha2) |
-            (((~((~digitos_value)>>(8*4)))|mask2)==senha2) |
-            (((~((~digitos_value)>>(9*4)))|mask2)==senha2) |
-            (((~((~digitos_value)>>(10*4)))|mask2)==senha2) |
-            (((~((~digitos_value)>>(11*4)))|mask2)==senha2) |
-            (((~((~digitos_value)>>(12*4)))|mask2)==senha2) |
-            (((~((~digitos_value)>>(13*4)))|mask2)==senha2) |
-            (((~((~digitos_value)>>(14*4)))|mask2)==senha2) |
-            (((~((~digitos_value)>>(15*4)))|mask2)==senha2) |
-            (((~((~digitos_value)>>(16*4)))|mask2)==senha2));
-
-            senha_valida3 <= ((((~((~digitos_value)>>(0*4)))|mask3)==senha3) |
-            (((~((~digitos_value)>>(1*4)))|mask3)==senha3) |
-            (((~((~digitos_value)>>(2*4)))|mask3)==senha3) |
-            (((~((~digitos_value)>>(3*4)))|mask3)==senha3) |
-            (((~((~digitos_value)>>(4*4)))|mask3)==senha3) |
-            (((~((~digitos_value)>>(5*4)))|mask3)==senha3) |
-            (((~((~digitos_value)>>(6*4)))|mask3)==senha3) |
-            (((~((~digitos_value)>>(7*4)))|mask3)==senha3) |
-            (((~((~digitos_value)>>(8*4)))|mask3)==senha3) |
-            (((~((~digitos_value)>>(9*4)))|mask3)==senha3) |
-            (((~((~digitos_value)>>(10*4)))|mask3)==senha3) |
-            (((~((~digitos_value)>>(11*4)))|mask3)==senha3) |
-            (((~((~digitos_value)>>(12*4)))|mask3)==senha3) |
-            (((~((~digitos_value)>>(13*4)))|mask3)==senha3) |
-            (((~((~digitos_value)>>(14*4)))|mask3)==senha3) |
-            (((~((~digitos_value)>>(15*4)))|mask3)==senha3) |
-            (((~((~digitos_value)>>(16*4)))|mask3)==senha3));
-
-            senha_valida4 <= ((((~((~digitos_value)>>(0*4)))|mask4)==senha4) |
-            (((~((~digitos_value)>>(1*4)))|mask4)==senha4) |
-            (((~((~digitos_value)>>(2*4)))|mask4)==senha4) |
-            (((~((~digitos_value)>>(3*4)))|mask4)==senha4) |
-            (((~((~digitos_value)>>(4*4)))|mask4)==senha4) |
-            (((~((~digitos_value)>>(5*4)))|mask4)==senha4) |
-            (((~((~digitos_value)>>(6*4)))|mask4)==senha4) |
-            (((~((~digitos_value)>>(7*4)))|mask4)==senha4) |
-            (((~((~digitos_value)>>(8*4)))|mask4)==senha4) |
-            (((~((~digitos_value)>>(9*4)))|mask4)==senha4) |
-            (((~((~digitos_value)>>(10*4)))|mask4)==senha4) |
-            (((~((~digitos_value)>>(11*4)))|mask4)==senha4) |
-            (((~((~digitos_value)>>(12*4)))|mask4)==senha4) |
-            (((~((~digitos_value)>>(13*4)))|mask4)==senha4) |
-            (((~((~digitos_value)>>(14*4)))|mask4)==senha4) |
-            (((~((~digitos_value)>>(15*4)))|mask4)==senha4) |
-            (((~((~digitos_value)>>(16*4)))|mask4)==senha4));
-            estado<=validar_senha;
-        end
         validar_senha: begin
-          senha_certa <= (senha_valida1 || senha_valida2 || senha_valida3 || senha_valida4);
-          estado<= validar_senhadenovo;
-        end
-        validar_senhadenovo:begin
-          if (senha_certa) begin
+          if ((
+              (((~((~digitos_value)>>(0*4 )))|mask1)==senha1) |
+              (((~((~digitos_value)>>(1*4 )))|mask1)==senha1) |
+              (((~((~digitos_value)>>(2*4 )))|mask1)==senha1) |
+              (((~((~digitos_value)>>(3*4 )))|mask1)==senha1) |
+              (((~((~digitos_value)>>(4*4 )))|mask1)==senha1) |
+              (((~((~digitos_value)>>(5*4 )))|mask1)==senha1) |
+              (((~((~digitos_value)>>(6*4 )))|mask1)==senha1) |
+              (((~((~digitos_value)>>(7*4 )))|mask1)==senha1) |
+              (((~((~digitos_value)>>(8*4 )))|mask1)==senha1) |
+              (((~((~digitos_value)>>(9*4 )))|mask1)==senha1) |
+              (((~((~digitos_value)>>(10*4)))|mask1)==senha1) |
+              (((~((~digitos_value)>>(11*4)))|mask1)==senha1) |
+              (((~((~digitos_value)>>(12*4)))|mask1)==senha1) |
+              (((~((~digitos_value)>>(13*4)))|mask1)==senha1) |
+              (((~((~digitos_value)>>(14*4)))|mask1)==senha1) |
+              (((~((~digitos_value)>>(15*4)))|mask1)==senha1) |
+              (((~((~digitos_value)>>(16*4)))|mask1)==senha1)
+            ) || (
+              (((~((~digitos_value)>>(0*4 )))|mask2)==senha2) |
+              (((~((~digitos_value)>>(1*4 )))|mask2)==senha2) |
+              (((~((~digitos_value)>>(2*4 )))|mask2)==senha2) |
+              (((~((~digitos_value)>>(3*4 )))|mask2)==senha2) |
+              (((~((~digitos_value)>>(4*4 )))|mask2)==senha2) |
+              (((~((~digitos_value)>>(5*4 )))|mask2)==senha2) |
+              (((~((~digitos_value)>>(6*4 )))|mask2)==senha2) |
+              (((~((~digitos_value)>>(7*4 )))|mask2)==senha2) |
+              (((~((~digitos_value)>>(8*4 )))|mask2)==senha2) |
+              (((~((~digitos_value)>>(9*4 )))|mask2)==senha2) |
+              (((~((~digitos_value)>>(10*4)))|mask2)==senha2) |
+              (((~((~digitos_value)>>(11*4)))|mask2)==senha2) |
+              (((~((~digitos_value)>>(12*4)))|mask2)==senha2) |
+              (((~((~digitos_value)>>(13*4)))|mask2)==senha2) |
+              (((~((~digitos_value)>>(14*4)))|mask2)==senha2) |
+              (((~((~digitos_value)>>(15*4)))|mask2)==senha2) |
+              (((~((~digitos_value)>>(16*4)))|mask2)==senha2)
+            ) || (
+              (((~((~digitos_value)>>(0*4 )))|mask3)==senha3) |
+              (((~((~digitos_value)>>(1*4 )))|mask3)==senha3) |
+              (((~((~digitos_value)>>(2*4 )))|mask3)==senha3) |
+              (((~((~digitos_value)>>(3*4 )))|mask3)==senha3) |
+              (((~((~digitos_value)>>(4*4 )))|mask3)==senha3) |
+              (((~((~digitos_value)>>(5*4 )))|mask3)==senha3) |
+              (((~((~digitos_value)>>(6*4 )))|mask3)==senha3) |
+              (((~((~digitos_value)>>(7*4 )))|mask3)==senha3) |
+              (((~((~digitos_value)>>(8*4 )))|mask3)==senha3) |
+              (((~((~digitos_value)>>(9*4 )))|mask3)==senha3) |
+              (((~((~digitos_value)>>(10*4)))|mask3)==senha3) |
+              (((~((~digitos_value)>>(11*4)))|mask3)==senha3) |
+              (((~((~digitos_value)>>(12*4)))|mask3)==senha3) |
+              (((~((~digitos_value)>>(13*4)))|mask3)==senha3) |
+              (((~((~digitos_value)>>(14*4)))|mask3)==senha3) |
+              (((~((~digitos_value)>>(15*4)))|mask3)==senha3) |
+              (((~((~digitos_value)>>(16*4)))|mask3)==senha3)
+            ) || (
+              (((~((~digitos_value)>>(0*4 )))|mask4)==senha4) |
+              (((~((~digitos_value)>>(1*4 )))|mask4)==senha4) |
+              (((~((~digitos_value)>>(2*4 )))|mask4)==senha4) |
+              (((~((~digitos_value)>>(3*4 )))|mask4)==senha4) |
+              (((~((~digitos_value)>>(4*4 )))|mask4)==senha4) |
+              (((~((~digitos_value)>>(5*4 )))|mask4)==senha4) |
+              (((~((~digitos_value)>>(6*4 )))|mask4)==senha4) |
+              (((~((~digitos_value)>>(7*4 )))|mask4)==senha4) |
+              (((~((~digitos_value)>>(8*4 )))|mask4)==senha4) |
+              (((~((~digitos_value)>>(9*4 )))|mask4)==senha4) |
+              (((~((~digitos_value)>>(10*4)))|mask4)==senha4) |
+              (((~((~digitos_value)>>(11*4)))|mask4)==senha4) |
+              (((~((~digitos_value)>>(12*4)))|mask4)==senha4) |
+              (((~((~digitos_value)>>(13*4)))|mask4)==senha4) |
+              (((~((~digitos_value)>>(14*4)))|mask4)==senha4) |
+              (((~((~digitos_value)>>(15*4)))|mask4)==senha4) |
+              (((~((~digitos_value)>>(16*4)))|mask4)==senha4)
+          )) begin
             estado <= porta_encostada;
             contFechado <= 0;
           end
@@ -411,54 +363,30 @@ module operacional#(
             estado <= validar_senha_master;
           end
         end
-        /*validar_senha_master: begin
-          //Validar senha master
-          senha <= data_setup_new.senha_master.digits;
-          if (senha[3*4 +:4] == 'hF)
-            mask <= 'hFFFFFFFFFFFFFFFFFFFF;
-          else if (senha[4*4 +:4] == 'hF)
-            mask <= 'hFFFFFFFFFFFFFFFF0000;
-          else if (senha[5*4 +:4] == 'hF)
-            mask <= 'hFFFFFFFFFFFFFFF00000;
-          else if (senha[6*4 +:4] == 'hF)
-            mask <= 'hFFFFFFFFFFFFFF000000;
-          else if (senha[7*4 +:4] == 'hF)
-            mask <= 'hFFFFFFFFFFFFF0000000;
-          else if (senha[8*4 +:4] == 'hF)
-            mask <= 'hFFFFFFFFFFFF00000000;
-          else if (senha[9*4 +:4] == 'hF)
-            mask <= 'hFFFFFFFFFFF000000000;
-          else if (senha[10*4 +:4] == 'hF)
-            mask <= 'hFFFFFFFFFF0000000000;
-          else if (senha[11*4 +:4] == 'hF)
-            mask <= 'hFFFFFFFFF00000000000;
-          else if (senha[12*4 +:4] == 'hF)
-            mask <= 'hFFFFFFFF000000000000;
-          else 	mask <= 80'hFFFFFFFFFFFFFFFFFFFF;
-
-          senha_master_valida <= ((((~((~digitos_value)>>(0*4)))|mask)==senha) |
-            (((~((~digitos_value)>>(1*4)))|mask)==senha) |
-            (((~((~digitos_value)>>(2*4)))|mask)==senha) |
-            (((~((~digitos_value)>>(3*4)))|mask)==senha) |
-            (((~((~digitos_value)>>(4*4)))|mask)==senha) |
-            (((~((~digitos_value)>>(5*4)))|mask)==senha) |
-            (((~((~digitos_value)>>(6*4)))|mask)==senha) |
-            (((~((~digitos_value)>>(7*4)))|mask)==senha) |
-            (((~((~digitos_value)>>(8*4)))|mask)==senha) |
-            (((~((~digitos_value)>>(9*4)))|mask)==senha) |
-            (((~((~digitos_value)>>(10*4)))|mask)==senha) |
-            (((~((~digitos_value)>>(11*4)))|mask)==senha) |
-            (((~((~digitos_value)>>(12*4)))|mask)==senha) |
-            (((~((~digitos_value)>>(13*4)))|mask)==senha) |
-            (((~((~digitos_value)>>(14*4)))|mask)==senha) |
-            (((~((~digitos_value)>>(15*4)))|mask)==senha) |
-            (((~((~digitos_value)>>(16*4)))|mask)==senha));
-
-          if(senha_master_valida) begin
+        validar_senha_master: begin
+          if(
+            (((~((~digitos_value)>>(0*4 )))|mask_master)==data_setup_new.senha_master) |
+            (((~((~digitos_value)>>(1*4 )))|mask_master)==data_setup_new.senha_master) |
+            (((~((~digitos_value)>>(2*4 )))|mask_master)==data_setup_new.senha_master) |
+            (((~((~digitos_value)>>(3*4 )))|mask_master)==data_setup_new.senha_master) |
+            (((~((~digitos_value)>>(4*4 )))|mask_master)==data_setup_new.senha_master) |
+            (((~((~digitos_value)>>(5*4 )))|mask_master)==data_setup_new.senha_master) |
+            (((~((~digitos_value)>>(6*4 )))|mask_master)==data_setup_new.senha_master) |
+            (((~((~digitos_value)>>(7*4 )))|mask_master)==data_setup_new.senha_master) |
+            (((~((~digitos_value)>>(8*4 )))|mask_master)==data_setup_new.senha_master) |
+            (((~((~digitos_value)>>(9*4 )))|mask_master)==data_setup_new.senha_master) |
+            (((~((~digitos_value)>>(10*4)))|mask_master)==data_setup_new.senha_master) |
+            (((~((~digitos_value)>>(11*4)))|mask_master)==data_setup_new.senha_master) |
+            (((~((~digitos_value)>>(12*4)))|mask_master)==data_setup_new.senha_master) |
+            (((~((~digitos_value)>>(13*4)))|mask_master)==data_setup_new.senha_master) |
+            (((~((~digitos_value)>>(14*4)))|mask_master)==data_setup_new.senha_master) |
+            (((~((~digitos_value)>>(15*4)))|mask_master)==data_setup_new.senha_master) |
+            (((~((~digitos_value)>>(16*4)))|mask_master)==data_setup_new.senha_master)
+          ) begin
             estado <= setup;
           end
           else estado <= leitura_senha_master;
-        end*/
+        end
         default: estado <= reset;
       endcase
     end
