@@ -32,7 +32,7 @@ module decodificador_de_teclado (
     tecladoDesativado
   } estado;
 
-  logic [6:0] ta; // 0 - 127
+  logic [12:0] ta; // 0 - 8191
   logic [6:0] td; // 0 - 127
   assign c0 = col_matriz == 4'b0111 || col_matriz == 4'b1011 || col_matriz == 4'b1101 || col_matriz == 4'b1110;
   assign c1 = col_matriz == 4'b1111;
